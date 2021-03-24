@@ -13,11 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.androiddevchallenge.ui.theme
+package com.oboenikui.weatherboard.domain.dashboard
 
-import androidx.compose.ui.graphics.Color
+import com.oboenikui.weatherboard.domain.StateFlowUseCase
+import com.oboenikui.weatherboard.model.dashboard.DashboardQuery
+import com.oboenikui.weatherboard.repository.PreferenceRepository
+import kotlinx.coroutines.flow.StateFlow
+import javax.inject.Inject
 
-val purple200 = Color(0xFFBB86FC)
-val purple500 = Color(0xFF6200EE)
-val purple700 = Color(0xFF3700B3)
-val teal200 = Color(0xFF03DAC5)
+class ObserveDashboardQueries @Inject constructor(
+    private val preferenceRepository: PreferenceRepository,
+) : StateFlowUseCase<Unit, List<DashboardQuery>>() {
+
+    override operator fun invoke(params: Unit): StateFlow<List<DashboardQuery>> {
+        return preferenceRepository.dashboardQueries
+    }
+}

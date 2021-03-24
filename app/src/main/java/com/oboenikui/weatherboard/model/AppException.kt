@@ -13,13 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.example.androiddevchallenge
+package com.oboenikui.weatherboard.model
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
-    // Add unit tests here
+class AppException(
+    val type: ErrorType,
+    override val message: String? = null,
+    val throwable: Throwable? = null,
+) : Exception(message, throwable)
+
+enum class ErrorType {
+    Network, Api, Other
 }

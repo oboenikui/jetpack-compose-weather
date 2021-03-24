@@ -30,16 +30,22 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.BottomAppBar
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -56,8 +62,9 @@ import com.oboenikui.weatherboard.model.weather.Temperatures
 import com.oboenikui.weatherboard.model.weather.WeatherType
 import com.oboenikui.weatherboard.model.weather.Wind
 import com.oboenikui.weatherboard.ui.theme.MyTheme
-import com.oboenikui.weatherboard.ui.util.WeatherIconUtil
+import com.oboenikui.weatherboard.ui.util.WeatherImageUtil
 import com.oboenikui.weatherboard.ui.util.toUnitString
+import dev.chrisbanes.accompanist.coil.CoilImage
 import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -70,7 +77,19 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
     Scaffold(
         scaffoldState = scaffoldState,
         bottomBar = {
-            BottomAppBar() {
+            BottomAppBar {
+                IconButton(
+                    onClick = {
+                        scope.launch {
+                            scaffoldState.snackbarHostState.showSnackbar("Clicked Menu")
+                        }
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_menu),
+                        contentDescription = stringResource(R.string.label_search),
+                    )
+                }
                 Spacer(Modifier.weight(1f, true))
                 IconButton(
                     onClick = {
@@ -110,7 +129,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
                             forecasts = forecasts
                         )
                     } else {
-                        DashboardQueryAddItem(
+                        DashboardQueryAddBody(
                             modifier = Modifier.weight(1f),
                             onClick = {
                             }
@@ -129,7 +148,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
                             )
                         }
                         queryAndForecasts.size == index * 2 + 1 -> {
-                            DashboardQueryAddItem(
+                            DashboardQueryAddBody(
                                 modifier = Modifier.weight(1f),
                                 onClick = {
                                 }
@@ -150,12 +169,30 @@ fun DashboardScreen(viewModel: DashboardViewModel = viewModel()) {
     }
 }
 
+private val CurrentItemHeight = 112.dp
+private val HourlyItemHeight = 104.dp
+
 @Composable
 private fun HeaderItem(current: CurrentForecast?, hourly: HourlyForecasts?) {
     Box(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
-            HeaderCurrentItem(current = current)
-            HeaderHourlyItem(hourly = hourly)
+        if (current != null) {
+            CoilImage(
+                modifier = Modifier.fillMaxWidth()
+                    .height(CurrentItemHeight + HourlyItemHeight + 16.dp),
+                data = WeatherImageUtil.getBackgroundUri(current.forecast.weathers.first()),
+                contentScale = ContentScale.Crop,
+                contentDescription = null,
+                fadeIn = true,
+                colorFilter = ColorFilter.lighting(Color.Gray, Color.Transparent)
+            ) {
+            }
+        }
+
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colors.onPrimary) {
+            Column(modifier = Modifier.fillMaxWidth()) {
+                HeaderCurrentItem(current = current)
+                HeaderHourlyItem(hourly = hourly)
+            }
         }
     }
 }
@@ -165,6 +202,7 @@ private fun HeaderCurrentItem(current: CurrentForecast?) {
     Column(
         Modifier
             .padding(16.dp)
+            .height(CurrentItemHeight - 16.dp * 2)
     ) {
         if (current == null) {
             Box {}
@@ -178,15 +216,21 @@ private fun HeaderCurrentItem(current: CurrentForecast?) {
                                 "MMMdHm"
                             )
                         )
-                    )
+                    ),
+                    style = MaterialTheme.typography.caption,
                 )
-                Text(modifier = Modifier.padding(start = 8.dp), text = current.placeName)
+                Text(
+                    modifier = Modifier.padding(start = 8.dp),
+                    text = current.placeName,
+                    style = MaterialTheme.typography.caption,
+                )
             }
+            Spacer(Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.Bottom) {
 
                 Icon(
                     modifier = Modifier.size(58.dp),
-                    painter = painterResource(WeatherIconUtil.getIconRes(current.forecast.weathers.first())),
+                    painter = painterResource(WeatherImageUtil.getIconRes(current.forecast.weathers.first())),
                     contentDescription = current.forecast.weathers.first().description,
                 )
                 Text(
@@ -209,7 +253,7 @@ private fun HeaderCurrentItem(current: CurrentForecast?) {
 private fun HeaderHourlyItem(hourly: HourlyForecasts?) {
     Column(
         Modifier
-            .height(104.dp)
+            .height(HourlyItemHeight)
             .fillMaxWidth()
     ) {
         if (hourly != null) {

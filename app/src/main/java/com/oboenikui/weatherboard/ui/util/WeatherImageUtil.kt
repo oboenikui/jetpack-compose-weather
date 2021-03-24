@@ -15,11 +15,12 @@
  */
 package com.oboenikui.weatherboard.ui.util
 
+import android.net.Uri
 import androidx.annotation.DrawableRes
 import com.oboenikui.weatherboard.R
 import com.oboenikui.weatherboard.model.weather.WeatherType
 
-object WeatherIconUtil {
+object WeatherImageUtil {
 
     @DrawableRes
     fun getIconRes(weatherType: WeatherType): Int {
@@ -32,5 +33,13 @@ object WeatherIconUtil {
             "10d" -> R.drawable.ic_weather_moderate_rain
             else -> 0
         }
+    }
+
+    fun getBackgroundUri(weatherType: WeatherType): Uri {
+        val url = when (weatherType.icon) {
+            "02d" -> "https://images.pexels.com/photos/3888585/pexels-photo-3888585.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            else -> "https://images.pexels.com/photos/3768/sky-sunny-clouds-cloudy.jpg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260" // dummy
+        }
+        return Uri.parse(url)
     }
 }

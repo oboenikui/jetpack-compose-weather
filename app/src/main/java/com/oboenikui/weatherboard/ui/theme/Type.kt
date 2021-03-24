@@ -41,7 +41,7 @@ val typography = Typography(
         fontFamily = FontFamily(
             Font(R.font.nunito_sans_light),
         ),
-        fontSize = 16.sp
+        fontSize = 20.sp
     ),
     body1 = TextStyle(
         fontFamily = FontFamily(

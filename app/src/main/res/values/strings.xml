@@ -12,4 +12,7 @@
     <string name="app_name">WeatherBoard</string>
     <string name="label_add_item">Add item</string>
     <string name="label_search">Search</string>
+    <string name="format_precipitation">Precipitation: %1$.0f\%%</string>
+    <string name="format_humidity">Humidity: %1$.0f\%%</string>
+    <string name="format_wind">Wind: %1$.0f\%%</string>
 </resources>

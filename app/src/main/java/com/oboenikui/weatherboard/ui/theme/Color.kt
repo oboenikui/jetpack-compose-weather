@@ -17,11 +17,11 @@ package com.oboenikui.weatherboard.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val lightPrimary = Color(0xFFFFF1F1)
-val lightSecondary = Color(0xFF3F2C2C)
+val lightPrimary = Color(0xFF4262F8)
+val lightSecondary = Color(0xFF3F4C2C)
 val lightBackground = Color(0xFFDFDFDF)
 val lightSurface = Color(0xFFFFFFFF)
-val lightOnPrimary = Color(0xFF232323)
+val lightOnPrimary = Color(0xFFFFFFFF)
 val lightOnSecondary = Color(0xFFFFFFFF)
 val lightOnBackground = Color(0xFF232323)
 val lightOnSurface = Color(0xFF232323)
@@ -36,3 +36,6 @@ val darkOnBackground = Color(0xFFFFFFFF)
 val darkOnSurface = Color(0xFFFFFFFF)
 
 val borderColor = Color(0xFF9D9E9D)
+
+val maxTempColor = Color(0xFFE77D00)
+val minTempColor = Color(0xFF3D7ACF)

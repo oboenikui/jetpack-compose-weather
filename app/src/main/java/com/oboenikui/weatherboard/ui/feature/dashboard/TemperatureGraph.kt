@@ -27,9 +27,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Icon
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -47,7 +49,7 @@ import com.oboenikui.weatherboard.model.weather.Temperatures
 import com.oboenikui.weatherboard.model.weather.WeatherType
 import com.oboenikui.weatherboard.model.weather.Wind
 import com.oboenikui.weatherboard.ui.theme.MyTheme
-import com.oboenikui.weatherboard.ui.util.WeatherIconUtil
+import com.oboenikui.weatherboard.ui.util.WeatherImageUtil
 import com.oboenikui.weatherboard.ui.util.toUnitString
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
@@ -67,7 +69,7 @@ private val TemperatureGraphLabelSize = 10.sp
 fun TemperatureGraph(
     modifier: Modifier = Modifier,
     hourly: HourlyForecasts,
-    lineColor: Color? = null,
+    color: Color = MaterialTheme.colors.onPrimary,
 ) {
     val forecasts = hourly.forecasts
     if (forecasts.isEmpty()) {
@@ -75,7 +77,6 @@ fun TemperatureGraph(
     }
     val max = forecasts.maxOf { it.temperatures.temperature } + 1
     val min = forecasts.minOf { it.temperatures.temperature } - 1
-    val color = lineColor ?: MaterialTheme.colors.onSurface
     Box(modifier = modifier.horizontalScroll(rememberScrollState())) {
         Box(
             modifier = modifier
@@ -116,9 +117,10 @@ fun TemperatureGraph(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Icon(
-                                painter = painterResource(WeatherIconUtil.getIconRes(weather.weathers.first())),
+                                painter = painterResource(WeatherImageUtil.getIconRes(weather.weathers.first())),
                                 contentDescription = weather.weathers.first().description,
                                 modifier = modifier.size(16.dp),
+                                tint = color,
                             )
                             if (weather.time.toLocalTime().hour == 0) {
                                 val generator = DateTimePatternGenerator.getInstance()
@@ -128,12 +130,12 @@ fun TemperatureGraph(
                                             generator.getBestPattern("Md")
                                         )
                                     ) +
-                                        "\n" +
-                                        weather.time.format(
-                                            DateTimeFormatter.ofPattern(
-                                                generator.getBestPattern("Hm")
-                                            )
-                                        ),
+                                            "\n" +
+                                            weather.time.format(
+                                                DateTimeFormatter.ofPattern(
+                                                    generator.getBestPattern("Hm")
+                                                )
+                                            ),
                                     fontSize = TemperatureGraphLabelSize,
                                     textAlign = TextAlign.Center,
                                     style = MaterialTheme.typography.caption,

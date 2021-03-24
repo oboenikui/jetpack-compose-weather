@@ -77,11 +77,15 @@ fun DashboardQueryItem(
                 Spacer(Modifier.height(8.dp))
 
                 when (query.mainColumn) {
-                    DashboardColumn.Weather -> WeatherQueryItem(query = query,
-                        forecasts = forecasts)
+                    DashboardColumn.Weather -> WeatherQueryItem(
+                        query = query,
+                        forecasts = forecasts
+                    )
                     DashboardColumn.Date -> DayQueryItem(query = query, forecasts = forecasts)
-                    DashboardColumn.Precipitation -> PrecipitationQueryItem(query = query,
-                        forecasts = forecasts)
+                    DashboardColumn.Precipitation -> PrecipitationQueryItem(
+                        query = query,
+                        forecasts = forecasts
+                    )
                     else -> DayQueryItem(query = query, forecasts = forecasts)
                 }
             }
@@ -115,8 +119,12 @@ private fun WeatherQueryItem(query: DashboardQuery, forecasts: List<Forecast<*>>
                 is Temperatures.Hourly -> TODO("Not implemented yet")
                 is Temperatures.Daily -> DailyTemperaturesBody(matchedFirstItem as Forecast<Temperatures.Daily>, false)
             }
-            Text(text = stringResource(R.string.format_precipitation,
-                matchedFirstItem.precipitation ?: -1f))
+            Text(
+                text = stringResource(
+                    R.string.format_precipitation,
+                    matchedFirstItem.precipitation ?: -1f
+                )
+            )
             Text(text = stringResource(R.string.format_humidity, matchedFirstItem.humidity))
             Text(text = stringResource(R.string.format_wind, matchedFirstItem.wind.speed))
         }
@@ -191,8 +199,12 @@ private fun DayQueryItem(query: DashboardQuery, forecasts: List<Forecast<*>>) {
                 is Temperatures.Daily -> DailyTemperaturesBody(matchedFirstItem as Forecast<Temperatures.Daily>)
             }
 
-            Text(text = stringResource(R.string.format_precipitation,
-                matchedFirstItem.precipitation ?: -1f))
+            Text(
+                text = stringResource(
+                    R.string.format_precipitation,
+                    matchedFirstItem.precipitation ?: -1f
+                )
+            )
         }
     }
 }
